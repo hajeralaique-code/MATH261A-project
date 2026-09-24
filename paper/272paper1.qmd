@@ -34,7 +34,7 @@ The research question for this analysis that I conducted is: Can a badminton pla
 #| output: false
 
 badminton <- read.csv(
-  "/Users/hajeralaique/Downloads/badminton_worldtour.csv"
+  "https://data.scorenetwork.org/data/badminton_worldtour.csv"
 )
 
 table(badminton$Category)
