@@ -8,8 +8,8 @@ This repository contains my MATH 261A simple linear regression project examining
 ## Repository Structure
 
 - `paper/` contains the Quarto source file, references, and rendered PDF report.
-- `analysis/` contains code used for the statistical analysis.
-- `data/` contains information related to the data used in the project.
+- `analysis/` from the Professor's template.
+- `data/` from the Professor's template.
 
 ## Data
 
