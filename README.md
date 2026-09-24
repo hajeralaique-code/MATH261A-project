@@ -1,17 +1,37 @@
-# MATH261A-project-template
-Example project repository for MATH 261A.
+# Predicting Badminton Player Wins
 
-## Data 
+**Author:** Hajera Laique  
+**Date:** September 25, 2026
 
-**Example statement:** Data used in this project is obtained from [San Francisco Open Data](https://data.sfgov.org) who provide the data under the [Open Data Commons Public Domain Dedication and License](https://opendatacommons.org/licenses/pddl/1-0/).
+This repository contains my MATH 261A simple linear regression project examining whether a professional badminton player's shot percentage can be used to predict their win percentage.
+
+## Repository Structure
+
+- `paper/` contains the Quarto source file, references, and rendered PDF report.
+- `analysis/` contains code used for the statistical analysis.
+- `data/` contains information related to the data used in the project.
+
+## Data
+
+The data used in this project comes from the SCORE Sports Data Repository and contains statistics for players who participated in the Badminton World Tour from 2018 through 2023.
+
+The dataset is available from the SCORE Sports Data Repository:
+https://data.scorenetwork.org/badminton/badminton_worldtour_2018-23.html
+
+The original dataset is credited by SCORE to Badminton Statistics:
+https://www.badmintonstatistics.net/
+
+The external raw dataset is not included in this repository.
 
 ## External Resources
 
-**Example statement:** The final report and code were written by [your name], but the following resources were used for preliminary research:
+The report and code for this project were written by Hajera Laique. External resources were used for preliminary research and assistance during the development of the project.
 
-* LLM-based chatbots (ex. ChatGPT Edu)
-* Online forums (ex. Stack Overflow).
+- Course materials for MATH 261A were used as references for simple linear regression methods and interpretation.
+- The SCORE Sports Data Repository was used for the dataset and background information about the data.
+- Jo (2025), *Development of sequential winning-percentage prediction model for badminton competitions: Applying the expert system sequential probability ratio test*, was used for background research on predicting badminton outcomes.
+- ChatGPT was used to help discuss the organization and clarity of the report and to provide aid for R code.
 
-# Acknowledgments
+## Acknowledgments
 
-This project repository is based on the template provided by [Rohan Alexander](https://github.com/RohanAlexander/starter_folder/tree/main).
+This project repository is based on the MATH 261A project template provided by the course instructor.
