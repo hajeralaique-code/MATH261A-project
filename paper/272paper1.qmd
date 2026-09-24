@@ -1,0 +1,196 @@
+---
+title: "Predicting Badminton Player Wins"
+subtitle: "Assessing whether badminton player's shot percentage can be used to predict their win percentage"
+author: "Hajera Laique"
+thanks: "Project repository available at: [https://github.com/hajeralaique-code/MATH261A-project](https://github.com/hajeralaique-code/MATH261A-project)."
+date: today
+date-format: long
+abstract: "In this study, we examine whether shot percentage can be used to predict win percentage amongst professional badminton players. Simple linear regression was performed on data from 185 players who participated in the Badminton World Tour between 2018 and 2023. A positive association between shot percentage and win percentage was found, with shot percentage explaining approximately 23.2% of the variation in win percentage. However, model diagnostics indicate limitations of the simple linear regression model, suggesting that predictions of win percentage based solely on shot percentage should be interpreted cautiously."
+format: pdf
+number-sections: true
+---
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+# load libraries
+```
+
+# Introduction
+
+Badminton is a racket sport that can be played individually in Singles or in pairs in Doubles. The sport takes place on a court divided by a net, where players use rackets to hit a feathered ball, also known as a birdie, over the net. Players score points by winning rallies, such as when the birdie lands on the opponent's side of the court. A match is played as the best of three games, with each game played to 21 points. At the professional level, the Badminton World Federation World Tour consists of tournaments played internationally. Because points accumulate throughout a match and ultimately contribute to whether a player wins or loses, point-scoring performance may contain useful information about a player's overall success.(Smith, 2024)
+
+Previous badminton research has also examined the use of scoring information and other match events to predict winning percentages. For example, Jo (2025) developed badminton winning-percentage prediction models using scoring skills, situations, and timing factors. The study used data from professional men’s Singles matches and considered events such as smashes, drops, opponent mistakes, and when points occurred during a game. The study found that these types of scoring information could be used to make real-time predictions of winning percentage during a match.(Jo, 2025)
+
+The research question for this analysis that I conducted is: Can a badminton player's shot percentage be used to predict their win percentage? To investigate this question, I used data from Badminton World Tour players from 2018 through 2023 and fit a simple linear regression model with shot percentage as the explanatory variable and win percentage as the response variable. The analysis found a positive association between shot percentage and win percentage, although limitations of the fitted model suggest that predictions should be interpreted cautiously.
+
+# Data {#sec-data}
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| output: false
+
+badminton <- read.csv(
+  "/Users/hajeralaique/Downloads/badminton_worldtour.csv"
+)
+
+table(badminton$Category)
+length(unique(badminton$Player))
+
+```
+
+The data used for the research came from the SCORE Sports Data Repository which contains data for players who participated in the Badminton World Tour between 2018 and 2023. The data set contains statistics for 185 players with nine variables for each.(Smith, 2024) 
+
+The two variables used in this analysis are shot_pct and win_pct. The explanatory variable is the shot_pct, which is calculated as the proportion of the total points scored by a player:
+$$
+\text{shot\_pct} =
+\frac{\text{pts\_for}}
+{\text{pts\_for}+\text{pts\_agst}}
+$$
+The response variable is win_pct, which is calculated as the proportion of matches won by a player:
+
+$$
+\text{win\_pct} =
+\frac{\text{Wins}}{\text{Matches}}
+$$
+Both values are recorded as proportions between the value of 0 and 1. It is also important to note that the measurements are cumulative over all the years. Each observation is a player, but the players could have participated in different numbers of matches. Players could have also been classified as competing in either Singles or Doubles matches. Of the 185 unique players, 109 are classified as Doubles players and 76 are classified as Singles players. Variables such as these could affect the win percentage but are not taken into account when predicting solely using shot percentage.
+
+# Methods {#sec-methods}
+
+I fit the simple linear regression model:
+
+$$Y_i = \beta_0 +\beta_1 X_i + \varepsilon_i$$
+
+
+In this model, $Y_i$ represents the win percentage for each of the 185 badminton players $i$, 
+$X_i$ represents the shot percentage for badminton player $i$, 
+$\beta_0$ represents the intercept, 
+$\beta_1$ represents the slope, or the change in the mean win percentage associated with a one-unit increase in shot percentage, and 
+$\varepsilon_i$ represents the random error for player $i$.
+
+To determine whether there is evidence of a linear relationship between shot percentage and win percentage, I tested
+
+$$
+H_0: \beta_1 = 0
+$$
+
+against
+
+$$
+H_A: \beta_1 \neq 0
+$$
+
+The null hypothesis states that there is no linear association between shot percentage and win percentage, while the alternative hypothesis states that there is a linear relationship.
+
+In simple linear regression, important assumptions include that the variables and model are appropriate for the research question, the data are representative of the population of interest, the relationship between the explanatory and response variables is approximately linear, and the errors are independent and have approximately equal variance. I assessed linearity using the scatter plot and equal variance using the residual plot. Independence cannot be directly assessed from these plots. Although each observation represents a unique player, there may still be similarities among players that are not accounted for by the model.
+
+I implemented this analysis using the R programming language specifically R version 4.6.1.
+
+
+# Results {#sec-results}
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| output: false
+
+model <- lm(win_pct ~ shot_pct, data = badminton)
+summary(model)
+```
+The fitted regression model was,
+
+$$
+\widehat{\text{win\_pct}}
+=
+-1.6257 + 4.4894(\text{shot\_pct})
+$$
+
+The estimated slope parameter was 4.4894. Since shot percentage is recorded as a proportion, a one percentage-point increase in shot percentage corresponds to an increase of 0.01. Therefore, a one percentage-point increase in shot percentage is associated with an estimated 4.49 percentage-point increase in the mean win percentage.
+
+The estimated intercept was -1.6257. This value represents the predicted win percentage when shot percentage equals zero. A shot percentage of zero is far outside the range of the observed data, so the intercept does not have a meaningful practical interpretation in this analysis.
+
+The estimated slope had a $t$-statistic of 7.443 and a p-value less than 0.001. Therefore, I reject the null hypothesis that $\beta_1 = 0$. The results provide strong evidence of a positive linear association between shot percentage and win percentage.
+
+The model had an $R^2$ of 0.2324, meaning that approximately 23.2% of the variation in win percentage is explained by shot percentage using this simple linear regression model. The remaining variation is not explained by shot percentage alone.
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-cap: "Scatterplot of shot percentage and win percentage with the fitted simple linear regression line."
+
+plot(
+  badminton$shot_pct,
+  badminton$win_pct,
+  xlab = "Shot Percentage",
+  ylab = "Win Percentage",
+  main = "Shot Percentage vs. Win Percentage"
+)
+
+abline(model, col = "red", lwd = 2)
+```
+The scatterplot shows a positive relationship between shot percentage and win percentage. In general, players with higher shot percentages tend to have higher win percentages. However, there is also noticeable variation in win percentage among players with similar shot percentages.
+
+The overall upward trend is consistent with a positive linear association, although the concentration of observations at a win percentage of 1 and the variation among players with similar shot percentages suggest that the relationship is not perfectly described by a straight line.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-cap: "Residuals versus fitted values for the regression model."
+
+plot(
+  fitted(model),
+  residuals(model),
+  xlab = "Fitted Values",
+  ylab = "Residuals",
+  pch = 19
+)
+
+abline(h = 0, col = "red")
+```
+The residual plot shows a funnel pattern, with greater variation in the residuals at lower fitted values and less variation at higher fitted values. The residuals also display noticeable structure rather than being randomly scattered around zero. This suggests that the equal variance assumption may not be satisfied and that the simple linear regression model may not completely describe the relationship between shot percentage and win percentage.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| output: false
+
+predict(
+  model,
+  newdata = data.frame(shot_pct = 0.55),
+  interval = "prediction"
+)
+```
+
+As an example of prediction, consider a player with a shot percentage of 0.55. The model predicts a win percentage of approximately 0.843, or 84.3%. The 95% prediction interval is approximately 0.510 to 1.176. The interval is relatively wide and its upper bound exceeds 1, even though a win percentage greater than 100% is impossible. This demonstrates an important limitation of using this simple linear regression model to predict individual players' win percentages.
+
+# Discussion {#sec-discussion}
+
+Overall, there is evidence of a positive association between shot percentage and win percentage. Higher shot percentages tend to correspond to higher win percentages. However, $R^2=0.2324$, so shot percentage alone accounts for only 23.2% of the variation in win percentage. This suggests that shot percentage provides some information about a player's win percentage, but it is not enough to accurately explain or predict winning performance on its own.
+
+One strength of the analysis is that it used a simple model that makes the relationship between shot percentage and win percentage easy to interpret. However, there are several limitations. The residual plot suggests that the equal variance assumption may not be satisfied, and the prediction interval for a shot percentage of 0.55 extends above 1, which is not a possible win percentage. In addition, the model does not account for other differences between players, such as the number of matches played or whether a player competed in Singles or Doubles.
+
+Future analysis could examine additional variables that may help explain win percentage. For example, Singles and Doubles players could be analyzed separately to determine whether the relationship between shot percentage and win percentage differs between the two groups. The number of matches played could also be considered because players with fewer matches may have less stable win percentages. Additional information about opponents or individual matches could provide a more complete understanding of the factors associated with winning in professional badminton.
+
+
+# References
+
+Jo, E. (2025). Development of sequential winning-percentage prediction model for badminton competitions: Applying the expert system sequential probability ratio test. BMC Sports Science, Medicine and Rehabilitation, 17(1). https://doi.org/10.1186/s13102-025-01078-6
+
+R Core Team (2026). _R: A Language and Environment for
+  Statistical Computing_. R Foundation for Statistical
+  Computing, Vienna, Austria. doi:10.32614/R.manuals
+  <https://doi.org/10.32614/R.manuals>.
+  <https://www.R-project.org/>.
+
+
+Smith, A. (2024, June 26). 2018-2023 Badminton world tour points head to head – SCORE sports data repository. Scorenetwork.Org. https://data.scorenetwork.org/badminton/badminton_worldtour_2018-23.html#motivation
+
+
