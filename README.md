@@ -8,8 +8,6 @@ This repository contains my MATH 261A simple linear regression project examining
 ## Repository Structure
 
 - `paper/` contains the Quarto source file, references, and rendered PDF report.
-- `analysis/` from the Professor's template.
-- `data/` from the Professor's template.
 
 ## Data
 
@@ -22,6 +20,8 @@ The original dataset is credited by SCORE to Badminton Statistics:
 https://www.badmintonstatistics.net/
 
 The external raw dataset is not included in this repository.
+
+Data License: The SCORE Sports Data Repository does not specify a particular license for this dataset. SCORE requires datasets in its repository to be publicly shareable and to have no licensing restrictions that prevent sharing for educational purposes. The original badminton dataset is credited by SCORE to Badminton Statistics.
 
 ## External Resources
 
