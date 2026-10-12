@@ -5,7 +5,7 @@ author: "Hajera Laique"
 thanks: "Project repository available at: [https://github.com/hajeralaique-code/MATH261A-project](https://github.com/hajeralaique-code/MATH261A-project)."
 date: today
 date-format: long
-abstract: "In this study, we examine whether shot percentage can be used to predict win percentage amongst professional badminton players. Simple linear regression was performed on data from 185 players who participated in the Badminton World Tour between 2018 and 2023. A positive association between shot percentage and win percentage was found, with shot percentage explaining approximately 23.2% of the variation in win percentage. However, model diagnostics indicate limitations of the simple linear regression model, suggesting that predictions of win percentage based solely on shot percentage should be interpreted cautiously."
+abstract: "In this study, we examine whether shot percentage, which is the proportion of total points won by a player, can be used to predict win percentage among professional badminton players. Simple linear regression was performed on data from 185 players who participated in the Badminton World Tour between 2018 and 2023. A positive association between shot percentage and win percentage was found, with shot percentage explaining approximately 23.2% of the variation in win percentage. However, model diagnostics indicate limitations of the simple linear regression model, suggesting that predictions of win percentage based solely on shot percentage should be interpreted cautiously."
 format: pdf
 number-sections: true
 ---
@@ -14,7 +14,6 @@ number-sections: true
 #| include: false
 #| warning: false
 #| message: false
-# load libraries
 ```
 
 # Introduction
@@ -23,7 +22,7 @@ Badminton is a racket sport that can be played individually in Singles or in pai
 
 Previous badminton research has also examined the use of scoring information and other match events to predict winning percentages. For example, Jo (2025) developed badminton winning-percentage prediction models using scoring skills, situations, and timing factors. The study used data from professional men’s Singles matches and considered events such as smashes, drops, opponent mistakes, and when points occurred during a game. The study found that these types of scoring information could be used to make real-time predictions of winning percentage during a match.(Jo, 2025)
 
-The research question for this analysis that I conducted is: Can a badminton player's shot percentage be used to predict their win percentage? To investigate this question, I used data from Badminton World Tour players from 2018 through 2023 and fit a simple linear regression model with shot percentage as the explanatory variable and win percentage as the response variable. The analysis found a positive association between shot percentage and win percentage, although limitations of the fitted model suggest that predictions should be interpreted cautiously.
+The research question for this analysis that I conducted is: Can a badminton player's shot percentage, which is the proportion of total points won by a player, be used to predict their win percentage? To investigate this question, I used data from Badminton World Tour players from 2018 through 2023 and fit a simple linear regression model with shot percentage as the explanatory variable and win percentage as the response variable. The analysis found a positive association between shot percentage and win percentage, although limitations of the fitted model suggest that predictions should be interpreted cautiously.
 
 # Data {#sec-data}
 
@@ -58,6 +57,48 @@ $$
 $$
 Both values are recorded as proportions between the value of 0 and 1. It is also important to note that the measurements are cumulative over all the years. Each observation is a player, but the players could have participated in different numbers of matches. Players could have also been classified as competing in either Singles or Doubles matches. Of the 185 unique players, 109 are classified as Doubles players and 76 are classified as Singles players. Variables such as these could affect the win percentage but are not taken into account when predicting solely using shot percentage.
 
+```{r}
+#| echo: false
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics for the variables used in the analysis and number of matches played."
+
+summary_table <- data.frame(
+  Variable = c("Shot Percentage", "Win Percentage", "Matches Played"),
+  Mean = c(
+    mean(badminton$shot_pct, na.rm = TRUE),
+    mean(badminton$win_pct, na.rm = TRUE),
+    mean(badminton$Matches, na.rm = TRUE)
+  ),
+  SD = c(
+    sd(badminton$shot_pct, na.rm = TRUE),
+    sd(badminton$win_pct, na.rm = TRUE),
+    sd(badminton$Matches, na.rm = TRUE)
+  ),
+  Min = c(
+    min(badminton$shot_pct, na.rm = TRUE),
+    min(badminton$win_pct, na.rm = TRUE),
+    min(badminton$Matches, na.rm = TRUE)
+  ),
+  Median = c(
+    median(badminton$shot_pct, na.rm = TRUE),
+    median(badminton$win_pct, na.rm = TRUE),
+    median(badminton$Matches, na.rm = TRUE)
+  ),
+  Max = c(
+    max(badminton$shot_pct, na.rm = TRUE),
+    max(badminton$win_pct, na.rm = TRUE),
+    max(badminton$Matches, na.rm = TRUE)
+  )
+)
+
+knitr::kable(
+  summary_table,
+  digits = 3,
+  col.names = c("Variable", "Mean", "SD", "Minimum", "Median", "Maximum")
+)
+```
+We can see here that the shot percentage had a narrow range, from 0.500 to 0.641, while win percentage had a wider range from 0 to 1. The number of matches played across players had a very wide range from 1 to 128 matches. The median player participated in only 5 matches whereas the maximum number of matches played is 128. Matches played had a mean of approximately 13.9 matches, indicating that the distribution of matches played is right-skewed. This variation is important because win percentages calculated from only a few matches may be less stable than those calculated from a larger number of matches.
+
 # Methods {#sec-methods}
 
 I fit the simple linear regression model:
@@ -87,7 +128,9 @@ The null hypothesis states that there is no linear association between shot perc
 
 In simple linear regression, important assumptions include that the variables and model are appropriate for the research question, the data are representative of the population of interest, the relationship between the explanatory and response variables is approximately linear, and the errors are independent and have approximately equal variance. I assessed linearity using the scatter plot and equal variance using the residual plot. Independence cannot be directly assessed from these plots. Although each observation represents a unique player, there may still be similarities among players that are not accounted for by the model.
 
-I implemented this analysis using the R programming language specifically R version 4.6.1.
+Another important factor to note is that shot percentage and win percentage are proportions that are between 0 and 1. Simple linear regression does not restrict predicted values to this range, so the model could possibly produce predictions outside the range of possible win percentages. This is an important limitation when using the fitted model for prediction.
+
+I implemented this analysis using the R programming language specifically R version 4.6.1. I fit the simple linear regression model using the lm() function and used summary() to obtain the estimated coefficients, test statistic, p-value, and $R^2$. I assessed the model using a scatter plot and residual plot and used predict() to obtain a 95% prediction interval for an example player.
 
 
 # Results {#sec-results}
@@ -192,5 +235,7 @@ R Core Team (2026). _R: A Language and Environment for
 
 
 Smith, A. (2024, June 26). 2018-2023 Badminton world tour points head to head – SCORE sports data repository. Scorenetwork.Org. https://data.scorenetwork.org/badminton/badminton_worldtour_2018-23.html#motivation
+
+
 
 
